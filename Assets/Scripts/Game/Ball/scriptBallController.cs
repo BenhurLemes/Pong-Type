@@ -13,13 +13,13 @@ public class scriptBallController : MonoBehaviour
     public void ResetBall()
     {
         transform.position = Vector3.zero;
-
-        if(Rigidbody2D == null)
+        if (Rigidbody2D == null)
         {
             Rigidbody2D = GetComponent<Rigidbody2D>();
         }
         Rigidbody2D.velocity = startingVelocity;
         isSpeedBall = false;
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

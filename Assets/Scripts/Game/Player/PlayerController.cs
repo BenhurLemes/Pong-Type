@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PaddleController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     // Start is called before the first frame update
     private float speed = 5f;
@@ -67,4 +67,8 @@ public class PaddleController : MonoBehaviour
         isDashing = false;
     }
 
+    public bool getDashing()
+    {
+        return isDashing;
+    }
 }

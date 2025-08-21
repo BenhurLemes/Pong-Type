@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,12 +30,26 @@ public class GameManager : MonoBehaviour
 
     public float Timer = 60f;
     public float TimerDuration;
+    [SerializeField] bool isFirstTime = true;
 
-    void Start()
+    // getters e setters
+    [SerializeField] bool isResetGame = false;
+    [SerializeField] private float resetShakeDuration = 0.3f;
+
+    #region getters e setters
+    private void setResetGame(bool resetGame)
     {
-        ResetGame();
+        this.isResetGame = resetGame;
     }
 
+    public bool getResetGame()
+    {
+        return this.isResetGame;
+    }
+    #endregion
+
+
+    #region Funções void 
     public void ScorePlayer()
     {
         Player_Pointers++;
@@ -51,6 +66,11 @@ public class GameManager : MonoBehaviour
 
     public void ResetGame()
     {
+        if (!isFirstTime)
+        {
+            setResetGame(true);
+        }
+
         PlayerPaddle.SetActive(true);
         EnemyPaddle.SetActive(true);
         Ball.SetActive(true);
@@ -58,6 +78,8 @@ public class GameManager : MonoBehaviour
         EnemyPaddle.transform.position = new Vector3(-7f, 0f, 0f);
         PlayerPaddle.transform.position = new Vector3(7f, 0f, 0f);
         scriptBallController.ResetBall();
+
+        StartCoroutine(ResetShakeFlag());
 
         if (Enemy_Pointers >= WinPoints || Player_Pointers >= WinPoints)
         {
@@ -74,11 +96,19 @@ public class GameManager : MonoBehaviour
         ScreenEndGame.SetActive(false);
     }
     
+    IEnumerator ResetShakeFlag()
+    {
+        yield return new WaitForSeconds(resetShakeDuration);
+        isFirstTime = false;
+        setResetGame(false);
+    }
+
     private void CheckWin()
     {
         if(Enemy_Pointers >= WinPoints || Player_Pointers >= WinPoints)
         {
             EndGame();
+            isFirstTime = true;
         }
         else
         {
@@ -122,6 +152,12 @@ public class GameManager : MonoBehaviour
                 ResetGame();
             }
         }
+    }
+    #endregion
+
+    void Start()
+    {
+        ResetGame();
     }
 
     private void Update()
